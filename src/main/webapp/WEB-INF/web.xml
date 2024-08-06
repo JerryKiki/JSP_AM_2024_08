@@ -19,4 +19,24 @@
     <welcome-file>default.htm</welcome-file>
     <welcome-file>default.jsp</welcome-file>
   </welcome-file-list>
+  <servlet>
+    <description></description>
+    <display-name>ArticleListServlet</display-name>
+    <servlet-name>ArticleListServlet</servlet-name>
+    <servlet-class>com.KoreaIT.java.jsp_AM.ArticleListServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ArticleListServlet</servlet-name>
+    <url-pattern>/ArticleListServlet</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>ArticleDeleteServlet</display-name>
+    <servlet-name>ArticleDeleteServlet</servlet-name>
+    <servlet-class>com.KoreaIT.java.jsp_AM.ArticleDeleteServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ArticleDeleteServlet</servlet-name>
+    <url-pattern>/ArticleDeleteServlet</url-pattern>
+  </servlet-mapping>
 </web-app>

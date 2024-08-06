@@ -75,15 +75,47 @@ int totalCount = (int) request.getAttribute("totalCount");
 	
 	<br>
 	
+	<div class="page">
 	<%
 	for(int i = 1; i <= maxPage; i++) {
 	%>
 	
-	<a href="http://localhost:8080/JSP_AM_2024_08/article/list?page=<%=i%>"><%=i%></a>
+	<%
+	
+	String displayPgN = Integer.toString(i);
+	
+	if(i<10) {
+	
+		displayPgN = "0" + displayPgN;
+	
+	} %>
+	
+	<a class="<%=pageNum == i ? "cPage" : "" %>" href="list?page=<%=i%>"><%=displayPgN%></a>
+	
+	<%
+	if(i%10==0) {
+	%>
+	<br>
+	<%}%>
 
 	<%
 	}
 	%>
+	</div>
+	
+		<style type="text/css">
+	
+	.page > a{
+		color: black;
+		text-decoration: none;
+	}
+	
+	.page > a.cPage {
+		color: red;
+		text-decoration: underline;	
+	}
+	
+	</style>
 
 
 </body>

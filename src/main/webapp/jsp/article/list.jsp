@@ -8,6 +8,7 @@
 List<Map<String, Object>> articleRows = (List<Map<String, Object>>) request.getAttribute("articleRows");
 int pageNum = (int) request.getAttribute("page");
 int maxPage = (int) request.getAttribute("maxpage");
+int totalCount = (int) request.getAttribute("totalCount");
 %>
 
 <!DOCTYPE html>
@@ -28,7 +29,9 @@ int maxPage = (int) request.getAttribute("maxpage");
 
 	<a href="../home/main">메인 페이지로</a>
 	
-	<h3><%=pageNum%>페이지</h3>
+	<h3>총 게시글 수 : <%=totalCount%></h3>
+	
+	<h4><%=pageNum%>페이지</h4>
 
 <!-- 	<ul> -->
 <%-- 		<% --%>

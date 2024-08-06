@@ -48,24 +48,24 @@ public class ArticleListServlet extends HttpServlet {
 				pageNum = Integer.parseInt(inputPage);
 			}
 			
-			//최대 페이지수 구하기
-			SecSql getPages = SecSql.from("SELECT *");
-			getPages.append("FROM article");
-			
-			List<Map<String, Object>> pageCount = DBUtil.selectRows(conn, getPages);
-			int pc = (int) pageCount.size();
-			int maxPage = 1;
-			if (pc%10==0) {
-				maxPage = pc/10;
-			} else {
-				maxPage = pc/10 + 1;
-			}
-			
-			//실제로 표시될 페이지 보내기
+			//필요한 변수 선언
 			int itemsInPage = 10;
 			int limitFrom = (pageNum - 1) * itemsInPage;
 			int limitTake = itemsInPage;
 			
+			//최대 페이지수 구하기
+			SecSql getCounts = SecSql.from("SELECT COUNT(*) AS PC");
+			getCounts.append("FROM article");
+			
+			int totalCount = DBUtil.selectRowIntValue(conn, getCounts);
+			int maxPage = (int) Math.ceil(totalCount / (double)itemsInPage);
+//			if (pageCount%itemsInPage==0) {
+//				maxPage = pageCount/itemsInPage;
+//			} else {
+//				maxPage = pageCount/itemsInPage + 1;
+//			}
+			
+			//실제로 표시될 페이지 보내기
 			SecSql sql = SecSql.from("SELECT *");
 			sql.append("FROM article");
 			sql.append("ORDER BY id DESC");
@@ -77,6 +77,7 @@ public class ArticleListServlet extends HttpServlet {
 
 			request.setAttribute("articleRows", articleRows);
 			request.setAttribute("page", pageNum);
+			request.setAttribute("totalCount", totalCount);
 			request.setAttribute("maxpage", maxPage);
 			request.getRequestDispatcher("/jsp/article/list.jsp").forward(request, response);
 			

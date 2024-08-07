@@ -74,11 +74,13 @@ public class ArticleListServlet extends HttpServlet {
 //			String sql = String.format("SELECT * FROM article ORDER BY id DESC LIMIT %d, %d", limitFrom, limitTake);
 
 			List<Map<String, Object>> articleRows = DBUtil.selectRows(conn, sql);
+			Map<String, Object> loginedMember = Session.getMember();
 
 			request.setAttribute("articleRows", articleRows);
 			request.setAttribute("page", pageNum);
 			request.setAttribute("totalCount", totalCount);
 			request.setAttribute("maxpage", maxPage);
+			request.setAttribute("loginedMember", loginedMember);
 			request.getRequestDispatcher("/jsp/article/list.jsp").forward(request, response);
 			
 

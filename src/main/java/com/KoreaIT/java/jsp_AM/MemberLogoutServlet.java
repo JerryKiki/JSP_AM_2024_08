@@ -11,8 +11,8 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Map;
 
-@WebServlet("/article/write")
-public class ArticleWriteServlet extends HttpServlet {
+@WebServlet("/member/logout")
+public class MemberLogoutServlet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("text/html;charset=UTF-8");
@@ -37,29 +37,16 @@ public class ArticleWriteServlet extends HttpServlet {
 			response.getWriter().append("연결 성공!<br>");
 			
 			if(Session.getMemberId() == -1) {
-				response.getWriter().append(String.format("<script>alert('로그인 후에 이용해주세요.'); location.replace('list');</script>"));
+				response.getWriter().append(String.format("<script>alert('이미 로그아웃 상태입니다.'); location.replace('http://localhost:8080/JSP_AM_2024_08/home/main');</script>"));
 			} else {
 			
-				String title = request.getParameter("title");
-				String body = request.getParameter("body");
+				Map<String, Object> loginedMember = Session.getMember();
 			
-				if(title == null || body == null) {
-					request.getRequestDispatcher("/jsp/article/write.jsp").forward(request, response);
-				} else {
+				String nowNickName = (String) loginedMember.get("nickName");
 			
-					SecSql sql = new SecSql();
-					sql.append("INSERT INTO article");
-					sql.append("SET regDate = NOW(),");
-					sql.append("updateDate = NOW(),");
-					sql.append("title = ?,", title);
-					sql.append("`body` = ?,", body);
-					sql.append("author = ?;", 1);
-
-					int insertedId = DBUtil.insert(conn, sql);
+				response.getWriter().append(String.format("<script>alert('%s님 로그아웃'); location.replace('http://localhost:8080/JSP_AM_2024_08/home/main');</script>", nowNickName));
 			
-					response.getWriter().append(String.format("<script>alert('%d번 글이 생성되었습니다'); location.replace('list');</script>", insertedId));
-			
-				}
+				Session.logout();
 			}			
 		} catch (SQLException e) {
 			System.out.println("에러 1 : " + e);
@@ -73,8 +60,6 @@ public class ArticleWriteServlet extends HttpServlet {
 			}
 		}
 	}
-	
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		doGet(request, response);
-	}
+
+
 }

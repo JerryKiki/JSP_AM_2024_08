@@ -38,30 +38,37 @@ public class MemberLoginServlet extends HttpServlet {
 		try {
 			conn = DriverManager.getConnection(url, user, password);
 			response.getWriter().append("연결 성공!");
+			
+			if(Session.getMemberId() != -1) {
+				response.getWriter().append(String.format("<script>alert('이미 로그인 중입니다.'); location.replace('http://localhost:8080/JSP_AM_2024_08/home/main');</script>"));
+			} else {
 
-			String loginId = request.getParameter("loginId");
-			String loginPw = request.getParameter("loginPw");
+				String loginId = request.getParameter("loginId");
+				String loginPw = request.getParameter("loginPw");
 			
-			if(loginId == null || loginPw == null) {
-				request.getRequestDispatcher("/jsp/member/login.jsp").forward(request, response);
+				if(loginId == null || loginPw == null) {
+					request.getRequestDispatcher("/jsp/member/login.jsp").forward(request, response);
+				}
+			
+				//로그인 전 체크
+				SecSql checkId = SecSql.from("SELECT * FROM member");
+				checkId.append("WHERE loginId = ?", loginId);
+			
+				Map<String, Object> memberCheck = DBUtil.selectRow(conn, checkId);
+			
+				if(memberCheck.get("id") == null) {	//id 있는지 확인
+					response.getWriter().append(String.format("<script>alert('존재하지 않는 아이디입니다.'); location.href = location.href; </script>"));
+				} else if(!memberCheck.get("loginPw").equals(loginPw)) {  //비밀번호 일치하는지 확인
+					response.getWriter().append(String.format("<script>alert('비밀번호가 일치하지 않습니다.'); location.href = location.href; </script>"));
+				} else { //전부 통과하면
+					int nowId = (int) memberCheck.get("id");
+					String nowNickName = (String) memberCheck.get("nickName");
+				
+					Session.login(memberCheck, nowId);
+				
+					response.getWriter().append(String.format("<script>alert('%d번 회원 %s님 환영합니다.'); location.replace('http://localhost:8080/JSP_AM_2024_08/home/main');</script>", nowId, nowNickName));			
+				}
 			}
-			
-			//로그인 전 체크
-			SecSql checkId = SecSql.from("SELECT * FROM member");
-			checkId.append("WHERE loginId = ?", loginId);
-			
-			Map<String, Object> memberCheck = DBUtil.selectRow(conn, checkId);
-			
-			if(memberCheck.get("id") == null) {	//id 있는지 확인
-				response.getWriter().append(String.format("<script>alert('존재하지 않는 아이디입니다.'); location.href = location.href; </script>"));
-			} else if(!memberCheck.get("loginPw").equals(loginPw)) {  //비밀번호 일치하는지 확인
-				response.getWriter().append(String.format("<script>alert('비밀번호가 일치하지 않습니다.'); location.href = location.href; </script>"));
-			} else { //전부 통과하면
-				int nowId = (int) memberCheck.get("id");
-				String nowNickName = (String) memberCheck.get("nickName");
-				response.getWriter().append(String.format("<script>alert('%d번 회원 %s님 환영합니다.'); location.replace('http://localhost:8080/JSP_AM_2024_08/home/main');</script>", nowId, nowNickName));			
-			}
-
 		} catch (SQLException e) {
 			System.out.println("에러 1 : " + e);
 		} finally {

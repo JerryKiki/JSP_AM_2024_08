@@ -9,6 +9,7 @@ List<Map<String, Object>> articleRows = (List<Map<String, Object>>) request.getA
 int pageNum = (int) request.getAttribute("page");
 int maxPage = (int) request.getAttribute("maxpage");
 int totalCount = (int) request.getAttribute("totalCount");
+Map<String, Object> loginedMember = (Map<String, Object>) request.getAttribute("loginedMember");
 %>
 
 <!DOCTYPE html>
@@ -28,6 +29,17 @@ int totalCount = (int) request.getAttribute("totalCount");
 <!-- 	<a href="detail" target="_blank">디테일 새 창</a> -->
 
 	<a href="http://localhost:8080/JSP_AM_2024_08/home/main">메인 페이지로</a>
+	
+	<%if(loginedMember !=  null) { %>
+	
+	<div>현재 로그인 멤버 : 고유번호=<%=loginedMember.get("id")%>, 아이디=<%=loginedMember.get("loginId")%>, 닉네임=<%=loginedMember.get("nickName")%></div>
+	<div><a href="http://localhost:8080/JSP_AM_2024_08/member/logout">로그아웃</a></div>
+	
+	<%} else {%>
+	
+	<div><a href="http://localhost:8080/JSP_AM_2024_08/member/login">로그인</a></div>
+	
+	<%} %>
 	
 	<h3>총 게시글 수 : <%=totalCount%></h3>
 	
@@ -126,9 +138,11 @@ int totalCount = (int) request.getAttribute("totalCount");
 	
 	<br>
 	
+	<%if(loginedMember !=  null) { %>
+	
 	<div><a style="color: white; background-color: black; text-decoration: none" href="write">글 작성</a></div>
 	
-	
+	<%} %>
 	
 	<!-- CSS -->
 	

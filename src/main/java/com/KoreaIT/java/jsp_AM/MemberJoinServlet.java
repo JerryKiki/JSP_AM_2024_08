@@ -11,8 +11,8 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Map;
 
-@WebServlet("/article/write")
-public class ArticleWriteServlet extends HttpServlet {
+@WebServlet("/member/join")
+public class MemberJoinServlet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("text/html;charset=UTF-8");
@@ -36,24 +36,36 @@ public class ArticleWriteServlet extends HttpServlet {
 			conn = DriverManager.getConnection(url, user, password);
 			response.getWriter().append("연결 성공!<br>");
 			
-			String title = request.getParameter("title");
-			String body = request.getParameter("body");
+			String loginId = request.getParameter("loginId");
+			String loginPw = request.getParameter("loginPw");
+			String nickName = request.getParameter("nickName");
 			
-			if(title == null || body == null) {
-				request.getRequestDispatcher("/jsp/article/write.jsp").forward(request, response);
+			if(loginId == null || loginPw == null || nickName == null) {
+				request.getRequestDispatcher("/jsp/member/join.jsp").forward(request, response);
 			} else {
+				
+			//중복체크부터
+			SecSql confirmId = new SecSql();
+			confirmId.append("SELECT * FROM member");
+			confirmId.append("WHERE loginId = ?", loginId);
 			
+			Map<String, Object> memberCheck = DBUtil.selectRow(conn, confirmId);
+			
+			if(memberCheck.get("id") != null) {
+				response.getWriter().append(String.format("<script>alert('중복된 아이디입니다. 다시 입력해주세요'); location.href = location.href; </script>"));
+			}
+				
+			//중복체크 문제없으면 삽입
 			SecSql sql = new SecSql();
-	        sql.append("INSERT INTO article");
+	        sql.append("INSERT INTO member");
 	        sql.append("SET regDate = NOW(),");
-	        sql.append("updateDate = NOW(),");
-	        sql.append("title = ?,", title);
-	        sql.append("`body` = ?,", body);
-	        sql.append("author = ?;", 1);
+	        sql.append("loginId = ?,", loginId);
+	        sql.append("loginPw = ?,", loginPw);
+	        sql.append("nickName = ?;", nickName);
 
 			int insertedId = DBUtil.insert(conn, sql);
 			
-			response.getWriter().append(String.format("<script>alert('%d번 글이 생성되었습니다'); location.replace('list');</script>", insertedId));
+			response.getWriter().append(String.format("<script>alert('%d번 회원 %s님 회원가입 완료'); location.replace('http://localhost:8080/JSP_AM_2024_08/home/main');</script>", insertedId, nickName));
 			
 			}
 			

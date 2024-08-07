@@ -27,7 +27,7 @@ int totalCount = (int) request.getAttribute("totalCount");
 <!-- 		target="_blank">리스트 새 창</a> -->
 <!-- 	<a href="detail" target="_blank">디테일 새 창</a> -->
 
-	<a href="../home/main">메인 페이지로</a>
+	<a href="http://localhost:8080/JSP_AM_2024_08/home/main">메인 페이지로</a>
 	
 	<h3>총 게시글 수 : <%=totalCount%></h3>
 	
@@ -52,6 +52,7 @@ int totalCount = (int) request.getAttribute("totalCount");
 				<th>날짜</th>
 				<th>제목</th>
 				<th>내용</th>
+				<th>수정</th>
 				<th>삭제</th>	
 			</tr>		
 		</thead>
@@ -64,16 +65,26 @@ int totalCount = (int) request.getAttribute("totalCount");
 				<td><%=articleRow.get("regDate")%></td>
 				<td><a href="detail?id=<%=articleRow.get("id")%>"><%=articleRow.get("title")%></a></td>
 				<td><%=articleRow.get("body")%></td>
+				<td><a href="update?id=<%=articleRow.get("id")%>">수정</a></td>
 				<td><a href="delete?id=<%=articleRow.get("id")%>">삭제</a></td>
 			</tr>
 			<%
 			}
-			%>
-		
+			%>		
 		</tbody>
 	</table>
 	
 	<br>
+	
+	<%if(pageNum!=1) {%>
+	
+	<div>
+		<a style="color: green; text-decoration: none" href="list?page=<%=pageNum-1%>">이전 페이지</a>	
+	</div>
+	
+	<br>
+	
+	<%}%>
 	
 	<div class="page">
 	<%
@@ -103,9 +114,28 @@ int totalCount = (int) request.getAttribute("totalCount");
 	%>
 	</div>
 	
-		<style type="text/css">
+	<br>
 	
-	.page > a{
+	<%if (pageNum != maxPage) { %>
+	
+	<div>
+		<a style="color: green; text-decoration: none" href="list?page=<%=pageNum+1%>">다음 페이지</a>	
+	</div>
+	
+	<%} %>
+	
+	<br>
+	
+	<div><a style="color: white; background-color: black; text-decoration: none" href="write">글 작성</a></div>
+	
+	
+	
+	<!-- CSS -->
+	
+	
+	<style type="text/css">
+	
+	.page > a {
 		color: black;
 		text-decoration: none;
 	}
@@ -113,6 +143,10 @@ int totalCount = (int) request.getAttribute("totalCount");
 	.page > a.cPage {
 		color: red;
 		text-decoration: underline;	
+	}
+	
+	td, th {
+		padding: 5px;
 	}
 	
 	</style>

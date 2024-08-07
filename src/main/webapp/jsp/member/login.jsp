@@ -22,7 +22,7 @@
 	
 		<div>
 			<label>패스워드 : </label>
-			<input type="text" name="loginPw">
+			<input autocomplete="off" type="text" name="loginPw">
 		</div>
 		
 		<br>

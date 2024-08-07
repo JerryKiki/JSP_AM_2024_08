@@ -36,17 +36,17 @@ public class MemberLogoutServlet extends HttpServlet {
 			conn = DriverManager.getConnection(url, user, password);
 			response.getWriter().append("연결 성공!<br>");
 			
-			if(Session.getMemberId() == -1) {
+			if(LoginSession.getMemberId() == -1) {
 				response.getWriter().append(String.format("<script>alert('이미 로그아웃 상태입니다.'); location.replace('http://localhost:8080/JSP_AM_2024_08/home/main');</script>"));
 			} else {
 			
-				Map<String, Object> loginedMember = Session.getMember();
+				Map<String, Object> loginedMember = LoginSession.getMember();
 			
 				String nowNickName = (String) loginedMember.get("nickName");
 			
 				response.getWriter().append(String.format("<script>alert('%s님 로그아웃'); location.replace('http://localhost:8080/JSP_AM_2024_08/home/main');</script>", nowNickName));
 			
-				Session.logout();
+				LoginSession.logout();
 			}			
 		} catch (SQLException e) {
 			System.out.println("에러 1 : " + e);

@@ -44,7 +44,8 @@ public class ArticleDetailServlet extends HttpServlet {
 			String inputId = request.getParameter("id");
 			
 			if (inputId == null) {
-				id = 3;
+				response.getWriter().append(String.format("<script>alert('게시글의 id를 입력하세요.'); location.replace('http://localhost:8080/JSP_AM_2024_08/home/main');</script>"));
+				return;
 			} else {
 				id = Integer.parseInt(inputId);
 			}

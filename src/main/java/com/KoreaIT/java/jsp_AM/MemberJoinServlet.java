@@ -36,37 +36,47 @@ public class MemberJoinServlet extends HttpServlet {
 			conn = DriverManager.getConnection(url, user, password);
 			response.getWriter().append("연결 성공!<br>");
 			
+			if(LoginSession.getMemberId() != -1) {
+				response.getWriter().append(String.format("<script>alert('로그인 중에는 이용할 수 없습니다.'); location.replace('http://localhost:8080/JSP_AM_2024_08/home/main'); </script>"));
+				return;
+			}
+			
 			String loginId = request.getParameter("loginId");
 			String loginPw = request.getParameter("loginPw");
+			//String loginPwConfirm = request.getParameter("loginPwConfirm");
 			String nickName = request.getParameter("nickName");
 			
 			if(loginId == null || loginPw == null || nickName == null) {
 				request.getRequestDispatcher("/jsp/member/join.jsp").forward(request, response);
 			} else {
+				// 주소 칠 때 ../ << 경로 하나 빠져 나가서 가라는 뜻
 				
-			//중복체크부터
-			SecSql confirmId = new SecSql();
-			confirmId.append("SELECT * FROM member");
-			confirmId.append("WHERE loginId = ?", loginId);
+				//중복체크부터
+				SecSql confirmId = new SecSql();
+				confirmId.append("SELECT * FROM member");
+				confirmId.append("WHERE loginId = ?", loginId);
 			
-			Map<String, Object> memberCheck = DBUtil.selectRow(conn, confirmId);
-			
-			if(memberCheck.get("id") != null) {
-				response.getWriter().append(String.format("<script>alert('중복된 아이디입니다. 다시 입력해주세요'); location.href = location.href; </script>"));
-			}
+				Map<String, Object> memberCheck = DBUtil.selectRow(conn, confirmId);
 				
-			//중복체크 문제없으면 삽입
-			SecSql sql = new SecSql();
-	        sql.append("INSERT INTO member");
-	        sql.append("SET regDate = NOW(),");
-	        sql.append("loginId = ?,", loginId);
-	        sql.append("loginPw = ?,", loginPw);
-	        sql.append("nickName = ?;", nickName);
+				//이거 이전에 했던 거 : join.jsp의 js에서 처리가 끝났기 때문에 확인 안해도 됨
+				//else if(!loginPw.equals(loginPwConfirm)) {
+				//response.getWriter().append(String.format("<script>alert('비밀번호 확인이 틀립니다. 다시 입력해주세요'); location.href = location.href; </script>"));
+			
+				if(memberCheck.get("id") != null) {
+					response.getWriter().append(String.format("<script>alert('중복된 아이디입니다. 다시 입력해주세요'); location.href = location.href; </script>"));
+				} else {				
+					//중복체크 및 비번확인 문제없으면 삽입
+					SecSql sql = new SecSql();
+					sql.append("INSERT INTO `member`");
+					sql.append("SET regDate = NOW(),");
+					sql.append("loginId = ?,", loginId);
+					sql.append("loginPw = ?,", loginPw);
+					sql.append("nickName = ?;", nickName);
 
-			int insertedId = DBUtil.insert(conn, sql);
+					int insertedId = DBUtil.insert(conn, sql);
 			
-			response.getWriter().append(String.format("<script>alert('%d번 회원 %s님 회원가입 완료'); location.replace('http://localhost:8080/JSP_AM_2024_08/home/main');</script>", insertedId, nickName));
-			
+					response.getWriter().append(String.format("<script>alert('%d번 회원 %s님 회원가입 완료'); location.replace('http://localhost:8080/JSP_AM_2024_08/home/main');</script>", insertedId, nickName));
+				}
 			}
 			
 		} catch (SQLException e) {

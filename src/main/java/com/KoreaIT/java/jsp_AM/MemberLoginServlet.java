@@ -39,7 +39,7 @@ public class MemberLoginServlet extends HttpServlet {
 			conn = DriverManager.getConnection(url, user, password);
 			response.getWriter().append("연결 성공!");
 			
-			if(Session.getMemberId() != -1) {
+			if(LoginSession.getMemberId() != -1) {
 				response.getWriter().append(String.format("<script>alert('이미 로그인 중입니다.'); location.replace('http://localhost:8080/JSP_AM_2024_08/home/main');</script>"));
 			} else {
 
@@ -48,25 +48,25 @@ public class MemberLoginServlet extends HttpServlet {
 			
 				if(loginId == null || loginPw == null) {
 					request.getRequestDispatcher("/jsp/member/login.jsp").forward(request, response);
-				}
+				} else {
+					//로그인 전 체크
+					SecSql checkId = SecSql.from("SELECT * FROM `member`");
+					checkId.append("WHERE loginId = ?", loginId);
 			
-				//로그인 전 체크
-				SecSql checkId = SecSql.from("SELECT * FROM member");
-				checkId.append("WHERE loginId = ?", loginId);
+					Map<String, Object> memberCheck = DBUtil.selectRow(conn, checkId);
 			
-				Map<String, Object> memberCheck = DBUtil.selectRow(conn, checkId);
-			
-				if(memberCheck.get("id") == null) {	//id 있는지 확인
-					response.getWriter().append(String.format("<script>alert('존재하지 않는 아이디입니다.'); location.href = location.href; </script>"));
-				} else if(!memberCheck.get("loginPw").equals(loginPw)) {  //비밀번호 일치하는지 확인
-					response.getWriter().append(String.format("<script>alert('비밀번호가 일치하지 않습니다.'); location.href = location.href; </script>"));
-				} else { //전부 통과하면
-					int nowId = (int) memberCheck.get("id");
-					String nowNickName = (String) memberCheck.get("nickName");
+					if(memberCheck.get("id") == null) {	//id 있는지 확인
+						response.getWriter().append(String.format("<script>alert('존재하지 않는 아이디입니다.'); location.href = location.href; </script>"));
+					} else if(!memberCheck.get("loginPw").equals(loginPw)) {  //비밀번호 일치하는지 확인
+						response.getWriter().append(String.format("<script>alert('비밀번호가 일치하지 않습니다.'); location.href = location.href; </script>"));
+					} else { //전부 통과하면
+						int nowId = (int) memberCheck.get("id");
+						String nowNickName = (String) memberCheck.get("nickName");
 				
-					Session.login(memberCheck, nowId);
+						LoginSession.login(memberCheck, nowId);
 				
-					response.getWriter().append(String.format("<script>alert('%d번 회원 %s님 환영합니다.'); location.replace('http://localhost:8080/JSP_AM_2024_08/home/main');</script>", nowId, nowNickName));			
+						response.getWriter().append(String.format("<script>alert('%d번 회원 %s님 환영합니다.'); location.replace('http://localhost:8080/JSP_AM_2024_08/home/main');</script>", nowId, nowNickName));			
+					}
 				}
 			}
 		} catch (SQLException e) {

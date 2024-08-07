@@ -36,7 +36,7 @@ public class ArticleWriteServlet extends HttpServlet {
 			conn = DriverManager.getConnection(url, user, password);
 			response.getWriter().append("연결 성공!<br>");
 			
-			if(Session.getMemberId() == -1) {
+			if(LoginSession.getMemberId() == -1) {
 				response.getWriter().append(String.format("<script>alert('로그인 후에 이용해주세요.'); location.replace('list');</script>"));
 			} else {
 			

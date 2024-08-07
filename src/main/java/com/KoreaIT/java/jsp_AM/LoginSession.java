@@ -2,7 +2,7 @@ package com.KoreaIT.java.jsp_AM;
 
 import java.util.Map;
 
-public class Session {
+public class LoginSession {
     public static Map<String, Object> loginMember;
     public static int loginMemberId;
 

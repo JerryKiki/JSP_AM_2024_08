@@ -2,7 +2,11 @@
     pageEncoding="UTF-8"%>
 <%@page import="java.util.Map"%>
     
-<% Map<String, Object> loginedMember = (Map<String, Object>) request.getAttribute("nowMember");%>
+<%
+Map<String, Object> loginedMember = (Map<String, Object>) request.getAttribute("nowMember");
+//여기도 httpsession으로 한번 바꿔보자...
+//setAttribue(로그인 할 때), getAttribute(로그인 했나?), removeAttribute(로그아웃 할 때) 찾아보기
+%>
 
 <!DOCTYPE html>
 <html>

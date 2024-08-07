@@ -30,19 +30,24 @@ Map<String, Object> loginedMember = (Map<String, Object>) request.getAttribute("
 
 	<div style="font-size: 1.4rem" class="menus">
 
-	<a href="http://localhost:8080/JSP_AM_2024_08/home/main">메인 페이지로</a>
+		<div><a href="http://localhost:8080/JSP_AM_2024_08/home/main">메인 페이지로</a></div>
+		
+		<br>
 	
-	<%if(loginedMember !=  null) { %>
+		<%if(loginedMember !=  null) { %>
+
+		<div>로그인 정보</div>
+		<div class="login-info">아이디=<%=loginedMember.get("loginId")%> <br> 닉네임=<%=loginedMember.get("nickName")%></div>
+		<div><a href="http://localhost:8080/JSP_AM_2024_08/member/logout">로그아웃</a></div>
 	
-	<div>로그인 정보 : 아이디=<%=loginedMember.get("loginId")%>, 닉네임=<%=loginedMember.get("nickName")%></div>
-	<div><a href="http://localhost:8080/JSP_AM_2024_08/member/logout">로그아웃</a></div>
+		<%} else {%>
 	
-	<%} else {%>
+		<div><a href="http://localhost:8080/JSP_AM_2024_08/member/login">로그인</a></div>
 	
-	<div><a href="http://localhost:8080/JSP_AM_2024_08/member/login">로그인</a></div>
-	
-	<%} %>
+		<%} %>
 	</div>
+	
+	<br>
 	
 	<div style="font-size: 2rem; font-weight: bold; margin: 10px; margin-bottom:20px; color: #FF4E88">총 게시글 수 : <%=totalCount%></div>
 	
@@ -146,7 +151,7 @@ Map<String, Object> loginedMember = (Map<String, Object>) request.getAttribute("
 	
 	<%if(loginedMember !=  null) { %>
 	
-	<div><a style="color: white; background-color: black; text-decoration: none" href="write">글 작성</a></div>
+	<div><a style="color: #FF4E88; background-color: #36BA98; text-decoration: none" href="write">글 작성</a></div>
 	
 	<%} %>
 	
@@ -212,6 +217,10 @@ Map<String, Object> loginedMember = (Map<String, Object>) request.getAttribute("
 		font-family: 'Pretendard-Regular';
 		color: black;
 		padding: 5px;
+	}
+	
+	.menus > .login-info {
+		color: #36BA98;
 	}
 	
 	</style>

@@ -64,6 +64,15 @@ public class MemberLoginServlet extends HttpServlet {
 						String nowNickName = (String) memberCheck.get("nickName");
 				
 						LoginSession.login(memberCheck, nowId);
+						
+						/* HttpSession 사용하기
+						HttpSession session = request.getSession();
+						session.setAttribute("loginedMemberId", memberCheck.get("id"));
+						session.setAttribute("loginedMemberLoginId", memberCheck.get("loginId"));
+						session.setAttribute("loginedMemberNickName", memberCheck.get("nickName"));
+						==> 이렇게 하면 세션에 로그인한 멤버를 남길 수 있다
+						==> 전역으로 저장되므로 활용하기 편하다
+						 */
 				
 						response.getWriter().append(String.format("<script>alert('%d번 회원 %s님 환영합니다.'); location.replace('http://localhost:8080/JSP_AM_2024_08/home/main');</script>", nowId, nowNickName));			
 					}

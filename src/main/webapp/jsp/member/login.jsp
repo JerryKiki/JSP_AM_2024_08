@@ -13,8 +13,32 @@
 <body>
 
 	<h2>로그인</h2>
+	
+	<script type="text/javascript">
+	
+		function LoginForm__submit(form) {
+			console.log("form.loginId.value : " + form.loginId.value);
+			console.log("form.loginPw.value : " + form.loginPw.value);
+			
+			let loginId = form.loginId.value.trim();
+			let loginPw = form.loginPw.value.trim();
 
-	<form action="http://localhost:8080/JSP_AM_2024_08/member/login" method="post">
+			if(loginId.length == 0) {
+				alert('아이디를 입력해주세요');
+				return;
+			}
+			if(loginPw.length == 0) {
+				alert('비밀번호를 입력해주세요');
+				return;
+			}
+			
+			//다 확인했으면 그냥 여기서 submit
+			form.submit();
+		}
+	
+	</script>
+
+	<form onsubmit="LoginForm__submit(this); return false;" action="http://localhost:8080/JSP_AM_2024_08/member/login" method="post">
 		<div>
 			<label>아이디 : </label>
 			<input type="text" name="loginId">

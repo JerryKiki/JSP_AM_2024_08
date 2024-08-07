@@ -47,6 +47,14 @@ public class MemberLogoutServlet extends HttpServlet {
 				response.getWriter().append(String.format("<script>alert('%s님 로그아웃'); location.replace('http://localhost:8080/JSP_AM_2024_08/home/main');</script>", nowNickName));
 			
 				LoginSession.logout();
+				/* HttpSession 사용하기
+				session.removeAttribute("loginedMemberId", memberCheck.get("id"));
+				session.removeAttribute("loginedMemberLoginId", memberCheck.get("loginId"));
+				session.removeAttribute("loginedMemberNickName", memberCheck.get("nickName"));
+				==> 이렇게 하면 세션에 로그인한 멤버를 남길 수 있다
+				==> 전역으로 저장되므로 활용하기 편하다
+				 */
+				
 			}			
 		} catch (SQLException e) {
 			System.out.println("에러 1 : " + e);
